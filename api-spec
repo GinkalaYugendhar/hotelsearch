@@ -13,7 +13,7 @@ tags:
     description: Operations related to hotel management
 
 paths:
-  /user-hotel-api/users:
+  /users/adduser:
     post:
       tags:
         - UserController
@@ -38,7 +38,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
+  /users/allusers:
     get:
       tags:
         - UserController
@@ -60,7 +60,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /user-hotel-api/users/{userId}:
+  /users/userhotels/{userId}:
     get:
       tags:
         - UserController
@@ -90,7 +90,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /user-hotel-api/login:
+  /users/login:
     post:
       tags:
         - UserController
@@ -124,7 +124,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
 
-  /user-hotel-api/hotels:
+  /hotels/addhotel:
     post:
       tags:
         - HotelController
@@ -149,7 +149,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-
+  /hotels/allhotels:
     get:
       tags:
         - HotelController
