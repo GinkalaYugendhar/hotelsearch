@@ -176,52 +176,60 @@ components:
     User:
       type: object
       properties:
-        id:
+        userId:
           type: integer
           format: int64
+          example: 1
+        userName:
+          type: string
+          example: "alice123"
+        userPassword:
+          type: string
+          example: "password123"
         name:
           type: string
-        address:
-          type: string
+          example: "Alice Johnson"
         city:
           type: string
-        pincode:
+          example: "Hyderabad"
+        pinCode:
           type: string
-
+          example: "500001"
     Hotel:
       type: object
       properties:
-        id:
+        hotelId:
           type: integer
           format: int64
-        name:
+          example: 101
+        hotelName:
           type: string
-        address:
+          example: "Taj Banjara"
+        hotelCity:
           type: string
-        locality:
+          example: "Hyderabad"
+        hotelAddress:
           type: string
-        city:
+          example: "Road No. 1, Banjara Hills, Hyderabad"
+        pinCode:
           type: string
-        pincode:
-          type: string
-        latitude:
-          type: number
-          format: double
-        longitude:
-          type: number
-          format: double
-
+          example: "500001"
     ErrorResponse:
       type: object
       properties:
         timestamp:
           type: string
           format: date-time
+          example: "2025-09-16T12:45:30Z"
         status:
           type: integer
+          example: 404
         error:
           type: string
+          example: "Not Found"
         message:
           type: string
+          example: "No hotels found for the given user ID"
         path:
           type: string
+          example: "/user-hotel-api/getUserId/1"
