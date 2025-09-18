@@ -232,4 +232,4 @@ components:
           example: "No hotels found for the given user ID"
         path:
           type: string
-          example: "/user-hotel-api/getUserId/1"
+          example: "/users/userhotels/1"
