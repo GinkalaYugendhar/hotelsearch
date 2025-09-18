@@ -1,144 +1,72 @@
 openapi: 3.0.1
 info:
-  title: OpenAPI definition
-  version: v0
+  title: Hotel Search
+  version: v1
 servers:
   - url: http://localhost:8080
-    description: Generated server url
+    description: Local server
+
 tags:
   - name: UserController
-    description: 'Operations related to user management, such as creating, updating, and fetching users '
+    description: Operations related to user management
+  - name: HotelController
+    description: Operations related to hotel management
+
 paths:
-  /user-hotel-api/addUsers:
+  /user-hotel-api/users:
     post:
       tags:
         - UserController
+      summary: Create a new user
       operationId: createUser
       requestBody:
+        required: true
         content:
           application/json:
             schema:
               $ref: '#/components/schemas/User'
-        required: true
       responses:
-        '200':
-          description: OK
+        '201':
+          description: User created successfully
           content:
-            '*/*':
+            application/json:
               schema:
                 $ref: '#/components/schemas/User'
         '500':
-          description: Issue in insert/create Failed or Internal server Error
+          description: Internal server error
           content:
-            '*/*':
+            application/json:
               schema:
-                $ref: '#/components/schemas/User'
-  /user-hotel-api/allUsers:
+                $ref: '#/components/schemas/ErrorResponse'
+
     get:
       tags:
         - UserController
+      summary: Get all users
       operationId: getAllUsers
       responses:
         '200':
-          description: OK
+          description: List of users
           content:
-            '*/*':
+            application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
         '404':
-          description: No Users found or issue in fetching data
+          description: No users found
           content:
-            '*/*':
+            application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/User'
-  /user-hotel-api/addHotels:
-    post:
-      tags:
-        - UserController
-      summary: 'create/add the new hotel '
-      operationId: createHotel
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Hotel'
-        required: true
-      responses:
-        '200':
-          description: new hotel is insert/create successfully
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/Hotel'
-        '500':
-          description: Issue in insert/create Failed or Internal server Error
-          content:
-            '*/*':
-              schema:
-                $ref: '#/components/schemas/User'
-  /user-hotel-api/allHotels:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user-hotel-api/users/{userId}:
     get:
       tags:
         - UserController
-      summary: Get all hotels
-      description: Fetches a list of all hotels available in the system
-      operationId: getAllHotels
-      responses:
-        '200':
-          description: Successfully retrieved list of hotels
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Hotel'
-        '404':
-          description: No hotels found or issue in fetching data
-          content:
-            '*/*':
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Hotel'
-  /user-hotel-api/loginUser:
-    post:
-      tags:
-        - UserController
-      summary: Login Details of User to return the user cities
-      description: Cross checks with userName, userPassword it is found returns of all hotels available in the system
-      operationId: loginUser
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              additionalProperties:
-                type: string
-        required: true
-      responses:
-        '200':
-          description: Successfully retrieved list of hotels
-          content:
-            '*/*':
-              schema:
-                type: object
-        '404':
-          description: No hotels found or issue in fetching data
-          content:
-            '*/*':
-              schema:
-                type: object
-  /user-hotel-api/getUserId/{userId}:
-    get:
-      tags:
-        - UserController
-      summary: Fetching list of Hotels by UserId
-      description: Returns the hotels based on user location
-      operationId: getListOfHotelByUserId
+      summary: Get hotels for a user
+      description: Fetch hotels based on user's city and pincode
+      operationId: getHotelsByUserId
       parameters:
         - name: userId
           in: path
@@ -148,44 +76,152 @@ paths:
             format: int64
       responses:
         '200':
-          description: Found the list of hotels based on given user location
+          description: Hotels found for user
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hotel'
         '404':
-          description: No hotels found matching with user location
+          description: No hotels found for user
           content:
-            '*/*':
+            application/json:
               schema:
-                type: object
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user-hotel-api/login:
+    post:
+      tags:
+        - UserController
+      summary: Login user
+      description: Validates username and password, returns matching hotels
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userName:
+                  type: string
+                userPassword:
+                  type: string
+      responses:
+        '200':
+          description: Successfully logged in
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hotel'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /user-hotel-api/hotels:
+    post:
+      tags:
+        - HotelController
+      summary: Create a new hotel
+      operationId: createHotel
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Hotel'
+      responses:
+        '201':
+          description: Hotel created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Hotel'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - HotelController
+      summary: Get all hotels
+      operationId: getAllHotels
+      responses:
+        '200':
+          description: List of hotels
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Hotel'
+        '404':
+          description: No hotels found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
 components:
   schemas:
     User:
       type: object
       properties:
-        userId:
+        id:
           type: integer
           format: int64
-        userName:
-          type: string
-        userPassword:
-          type: string
         name:
+          type: string
+        address:
           type: string
         city:
           type: string
-        pinCode:
+        pincode:
           type: string
+
     Hotel:
       type: object
       properties:
-        hotelId:
+        id:
           type: integer
           format: int64
-        hotelName:
+        name:
           type: string
-        hotelCity:
+        address:
           type: string
-        hotelAddress:
+        locality:
+          type: string
+        city:
+          type: string
+        pincode:
+          type: string
+        latitude:
+          type: number
+          format: double
+        longitude:
+          type: number
+          format: double
+
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
           type: string
